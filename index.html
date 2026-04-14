@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>UUID Generator | v4 & v1 | Developer Tool</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(145deg, #0b1120 0%, #111827 100%);
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+        }
+
+        /* main card container */
+        .uuid-card {
+            max-width: 860px;
+            width: 100%;
+            background: rgba(18, 25, 45, 0.75);
+            backdrop-filter: blur(12px);
+            border-radius: 2.5rem;
+            box-shadow: 0 25px 45px -12px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(72, 187, 255, 0.15);
+            padding: 2rem 2rem 2.2rem;
+            transition: all 0.2s ease;
+        }
+
+        /* header section */
+        .header {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            margin-bottom: 1.8rem;
+            border-bottom: 1px solid rgba(56, 189, 248, 0.3);
+            padding-bottom: 1rem;
+        }
+
+        h1 {
+            font-size: 1.9rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #E0F2FE, #7DD3FC);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            letter-spacing: -0.3px;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        h1::before {
+            content: "ðŸ”‘";
+            font-size: 1.8rem;
+            background: none;
+            background-clip: unset;
+            -webkit-background-clip: unset;
+            color: #7dd3fc;
+        }
+
+        .version-badge {
+            background: #1e293b;
+            padding: 0.3rem 0.9rem;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: #94a3b8;
+            border: 1px solid #334155;
+        }
+
+        /* controls row */
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            align-items: center;
+            justify-content: space-between;
+            background: #0f172a80;
+            padding: 0.75rem 1.2rem;
+            border-radius: 2rem;
+            backdrop-filter: blur(4px);
+        }
+
+        .uuid-type {
+            display: flex;
+            gap: 0.75rem;
+            background: #0a0f1c;
+            padding: 0.3rem 0.6rem;
+            border-radius: 2.5rem;
+        }
+
+        .type-btn {
+            background: transparent;
+            border: none;
+            padding: 0.5rem 1.2rem;
+            border-radius: 2rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: 0.2s;
+            color: #cbd5e1;
+            font-family: inherit;
+        }
+
+        .type-btn.active {
+            background: #2c3e66;
+            color: white;
+            box-shadow: 0 2px 8px rgba(0, 160, 255, 0.3);
+            background: linear-gradient(105deg, #2563eb, #3b82f6);
+        }
+
+        .type-btn:first-child.active {
+            background: linear-gradient(105deg, #2563eb, #3b82f6);
+        }
+
+        .type-btn:last-child.active {
+            background: linear-gradient(105deg, #1e40af, #3b82f6);
+        }
+
+        .action-group {
+            display: flex;
+            gap: 0.8rem;
+        }
+
+        .generate-btn {
+            background: linear-gradient(95deg, #0f2b4d, #1e3a8a);
+            border: none;
+            padding: 0.55rem 1.5rem;
+            border-radius: 2rem;
+            font-weight: 600;
+            color: white;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: inherit;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .generate-btn:hover {
+            background: linear-gradient(95deg, #1e3a8a, #2563eb);
+            transform: scale(0.97);
+            box-shadow: 0 2px 6px rgba(59, 130, 246, 0.4);
+        }
+
+        /* output area */
+        .output-container {
+            background: #010409e0;
+            border-radius: 1.5rem;
+            padding: 0.2rem;
+            border: 1px solid #2d3a5e;
+            margin-bottom: 1.5rem;
+            transition: 0.2s;
+        }
+
+        .uuid-display {
+            background: #030712;
+            border-radius: 1.4rem;
+            padding: 1.2rem 1.5rem;
+            font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+            font-size: 1.3rem;
+            font-weight: 500;
+            word-break: break-all;
+            letter-spacing: 0.3px;
+            color: #b9f3ff;
+            text-shadow: 0 0 2px #00a6ff30;
+            border: none;
+            resize: vertical;
+            min-height: 100px;
+            line-height: 1.4;
+        }
+
+        .copy-section {
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.8rem;
+            margin-top: 0.8rem;
+            padding: 0 0.5rem 0.8rem 0.5rem;
+        }
+
+        .copy-btn, .new-uuid-btn {
+            background: #1e2a47;
+            border: none;
+            padding: 0.5rem 1.2rem;
+            border-radius: 2rem;
+            font-weight: 500;
+            font-size: 0.8rem;
+            cursor: pointer;
+            color: #cbd5e6;
+            font-family: inherit;
+            transition: 0.15s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .copy-btn:hover, .new-uuid-btn:hover {
+            background: #2d3b5e;
+            color: white;
+        }
+
+        .toast-msg {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1f2a48e6;
+            backdrop-filter: blur(12px);
+            color: #a5f3ff;
+            padding: 0.6rem 1.4rem;
+            border-radius: 2rem;
+            font-size: 0.85rem;
+            font-weight: 500;
+            border-left: 3px solid #3b82f6;
+            pointer-events: none;
+            z-index: 1000;
+            transition: opacity 0.2s;
+            font-family: monospace;
+        }
+
+        /* additional info & meta */
+        .info-panel {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1rem;
+            font-size: 0.75rem;
+            color: #6b7b9f;
+            border-top: 1px solid #1f2a44;
+            padding-top: 1rem;
+        }
+
+        .badge-version {
+            background: #0f172a;
+            padding: 0.2rem 0.7rem;
+            border-radius: 20px;
+            font-family: monospace;
+        }
+
+        button {
+            background: none;
+            border: none;
+        }
+
+        @media (max-width: 560px) {
+            .uuid-card {
+                padding: 1.3rem;
+            }
+            .uuid-display {
+                font-size: 1rem;
+                padding: 1rem;
+            }
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .uuid-type {
+                justify-content: center;
+            }
+            .action-group {
+                justify-content: center;
+            }
+            .type-btn {
+                padding: 0.4rem 1rem;
+            }
+        }
+
+        /* subtle glow */
+        .uuid-display:focus-visible {
+            outline: none;
+        }
+        .copy-btn:active, .generate-btn:active {
+            transform: scale(0.96);
+        }
+        footer {
+            font-size: 0.7rem;
+            text-align: center;
+            margin-top: 1rem;
+            opacity: 0.7;
+        }
+    </style>
+</head>
+<body>
+
+<div class="uuid-card">
+    <div class="header">
+        <h1>UUID Forge</h1>
+        <div class="version-badge">RFC 4122</div>
+    </div>
+
+    <div class="controls">
+        <div class="uuid-type" id="uuidTypeGroup">
+            <button class="type-btn active" data-version="v4">UUID v4 ðŸ”€ (random)</button>
+            <button class="type-btn" data-version="v1">UUID v1 â±ï¸ (timestamp)</button>
+        </div>
+        <div class="action-group">
+            <button class="generate-btn" id="mainGenBtn">âœ¨ Generate New</button>
+        </div>
+    </div>
+
+    <div class="output-container">
+        <div class="uuid-display" id="uuidOutput">00000000-0000-0000-0000-000000000000</div>
+        <div class="copy-section">
+            <button class="copy-btn" id="copyBtn">ðŸ“‹ Copy UUID</button>
+            <button class="new-uuid-btn" id="quickGenBtn">ðŸ”„ New UUID</button>
+        </div>
+    </div>
+
+    <div class="info-panel">
+        <span>âš¡ Fully clientâ€‘side | v4 (cryptographically random) & v1 (timestamp + MAC/random)</span>
+        <span class="badge-version">deepseek Â· zero dependencies</span>
+    </div>
+    <footer>âœ” Click copy or generate â€” UUIDs follow standard format 8-4-4-4-12</footer>
+</div>
+
+<script>
+    (function() {
+        // ---------- UUID v4 generator (RFC compliant) ----------
+        function generateUUIDv4() {
+            // Use crypto.getRandomValues when available, fallback to Math.random (rare but safe)
+            const randomBytes = new Uint8Array(16);
+            if (window.crypto && window.crypto.getRandomValues) {
+                window.crypto.getRandomValues(randomBytes);
+            } else {
+                // fallback for very old insecure contexts (still functional)
+                for (let i = 0; i < 16; i++) {
+                    randomBytes[i] = Math.floor(Math.random() * 256);
+                }
+            }
+            // set version (4) and variant bits (RFC4122)
+            randomBytes[6] = (randomBytes[6] & 0x0f) | 0x40;   // version 4
+            randomBytes[8] = (randomBytes[8] & 0x3f) | 0x80;   // variant IETF
+            
+            // convert to hex string
+            const hex = Array.from(randomBytes, byte => byte.toString(16).padStart(2, '0')).join('');
+            return `${hex.slice(0,8)}-${hex.slice(8,12)}-${hex.slice(12,16)}-${hex.slice(16,20)}-${hex.slice(20,32)}`;
+        }
+        
+        // ---------- UUID v1 generator (timestamp + node) ----------
+        // For reliable & collision-resistant v1, we implement using timestamp (100ns intervals since 1582-10-15)
+        // plus a node id (either random or from fallback). We'll maintain a deterministic sequence.
+        // Using high-resolution time and a random node id per session. This matches standard v1.
+        
+        let lastTimestamp = null;
+        let clockSequence = null;
+        let nodeId = null;
+        
+        // Initialize node id (48 bits) - random per session but static for this instance (makes valid v1)
+        function getOrCreateNodeId() {
+            if (nodeId) return nodeId;
+            // Generate 48-bit node id using crypto random or Math.random
+            const nodeBytes = new Uint8Array(6);
+            if (window.crypto && window.crypto.getRandomValues) {
+                window.crypto.getRandomValues(nodeBytes);
+            } else {
+                for (let i = 0; i < 6; i++) nodeBytes[i] = Math.floor(Math.random() * 256);
+            }
+            // set multicast bit (least significant bit of first octet) to 1 to indicate random/node (non-mac)
+            nodeBytes[0] = (nodeBytes[0] & 0xfe) | 0x01;
+            nodeId = Array.from(nodeBytes, b => b.toString(16).padStart(2, '0')).join('');
+            return nodeId;
+        }
+        
+        function getClockSequence() {
+            if (clockSequence !== null) return clockSequence;
+            // 14-bit clock sequence (range 0-16383)
+            const seqBytes = new Uint8Array(2);
+            if (window.crypto && window.crypto.getRandomValues) {
+                window.crypto.getRandomValues(seqBytes);
+            } else {
+                seqBytes[0] = Math.floor(Math.random() * 256);
+                seqBytes[1] = Math.floor(Math.random() * 256);
+            }
+            clockSequence = ((seqBytes[0] << 8) | seqBytes[1]) & 0x3FFF; // 14 bits
+            return clockSequence;
+        }
+        
+        // returns timestamp in 100-nanosecond intervals since 1582-10-15 00:00:00 UTC
+        function getGregorianTimestamp() {
+            const now = Date.now(); // milliseconds since 1970-01-01
+            // difference between unix epoch (1970-01-01) and gregorian epoch (1582-10-15) in milliseconds
+            // 1970 - 1582 = 388 years + leap days etc. Known offset: 12219292800000 ms
+            const GREGORIAN_OFFSET_MS = 12219292800000;
+            const totalMsSinceGregorian = now + GREGORIAN_OFFSET_MS;
+            // convert to 100-nanosecond units: 1 ms = 10,000 units of 100ns
+            const timestamp100ns = totalMsSinceGregorian * 10000;
+            return timestamp100ns;
+        }
+        
+        function generateUUIDv1() {
+            // Get timestamp (60 bits)
+            let timestamp = getGregorianTimestamp();
+            const maxTimestamp = 0xFFFFFFFFFFFFFFFF; // 64-bit max safe? but JS uses bigint? Actually we stay within 2^53 for bit ops? need to split parts.
+            // timestamp is up to 2^60, we split into three parts: time_low, time_mid, time_high_version
+            // RFC: uuid = time_low (32 bits) - time_mid (16 bits) - time_high_and_version (16 bits, version bits 4)
+            // we must also manage clock sequence and node.
+            
+            // To avoid issues with big integers, we'll use BigInt for precise bit manipulation but still produce standard hex
+            // but for simplicity we can use BigInt arithmetic and then slice hex, all modern browsers support BigInt.
+            let timestampBig = BigInt(timestamp);
+            // timestamp range is less than 2^60 so safe
+            const timeLow = Number(timestampBig & 0xFFFFFFFFn); // lower 32 bits
+            const timeMid = Number((timestampBig >> 32n) & 0xFFFFn);
+            let timeHigh = Number((timestampBig >> 48n) & 0xFFFn); // 12 bits
+            
+            // version v1 => version number 1 placed in the most significant 4 bits of time_high
+            // time_high_and_version = (time_high & 0x0FFF) | (version << 12)
+            const version = 1;
+            const timeHighAndVersion = (timeHigh & 0x0FFF) | (version << 12);
+            
+            // clock sequence (14 bits) -> then variants bit set (10xx)
+            let clockSeqVal = getClockSequence();
+            // variant bits: set highest two bits to 10 (RFC 4122 variant)
+            clockSeqVal = (clockSeqVal & 0x3FFF) | 0x8000;  // set bit 15 and clear bit 14? Actually variant: 10xxxxxx...
+            // clock_seq_low and clock_seq_high: 8 bits each
+            const clockSeqHigh = (clockSeqVal >> 8) & 0xFF;
+            const clockSeqLow = clockSeqVal & 0xFF;
+            
+            const nodeHex = getOrCreateNodeId(); // 12 hex chars
+            
+            // format time_low (8 hex) - time_mid (4 hex) - time_high_version (4 hex) - clock_seq (4 hex) - node (12 hex)
+            const timeLowHex = timeLow.toString(16).padStart(8, '0');
+            const timeMidHex = timeMid.toString(16).padStart(4, '0');
+            const timeHighHex = timeHighAndVersion.toString(16).padStart(4, '0');
+            const clockSeqHex = clockSeqHigh.toString(16).padStart(2, '0') + clockSeqLow.toString(16).padStart(2, '0');
+            
+            let generated = `${timeLowHex}-${timeMidHex}-${timeHighHex}-${clockSeqHex}-${nodeHex}`;
+            
+            // Additionally, we must ensure monotonicity: if same timestamp and same clockSeq, we increment clock sequence? 
+            // but simple approach: if timestamp repeats within same ms, we increment clockSeq to avoid duplicates
+            const currentTimestampRaw = timestamp;
+            if (lastTimestamp !== null && currentTimestampRaw === lastTimestamp) {
+                // increment clock sequence and save
+                let newClock = (clockSeqVal + 1) & 0x3FFF;
+                newClock = newClock | 0x8000;
+                clockSequence = newClock & 0xFFFF;
+                // regenerate with new clock sequence
+                const newClockHigh = (clockSequence >> 8) & 0xFF;
+                const newClockLow = clockSequence & 0xFF;
+                const newClockHex = newClockHigh.toString(16).padStart(2, '0') + newClockLow.toString(16).padStart(2, '0');
+                generated = `${timeLowHex}-${timeMidHex}-${timeHighHex}-${newClockHex}-${nodeHex}`;
+            }
+            lastTimestamp = currentTimestampRaw;
+            return generated;
+        }
+        
+        // ---- UI state ----
+        let currentVersion = 'v4';   // v4 or v1
+        let currentUUID = '';
+        
+        const uuidOutputDiv = document.getElementById('uuidOutput');
+        const copyBtn = document.getElementById('copyBtn');
+        const quickGenBtn = document.getElementById('quickGenBtn');
+        const mainGenBtn = document.getElementById('mainGenBtn');
+        const typeBtns = document.querySelectorAll('.type-btn');
+        
+        // update active button style
+        function setActiveVersion(version) {
+            typeBtns.forEach(btn => {
+                const btnVer = btn.getAttribute('data-version');
+                if (btnVer === version) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+            currentVersion = version;
+        }
+        
+        // core generator switch
+        function generateUUIDByVersion(version) {
+            if (version === 'v4') {
+                return generateUUIDv4();
+            } else { // v1
+                return generateUUIDv1();
+            }
+        }
+        
+        // generate and update display
+        function generateAndDisplay(version = currentVersion) {
+            let newUUID;
+            try {
+                newUUID = generateUUIDByVersion(version);
+                // validation: ensure format xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+                const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+                if (!uuidRegex.test(newUUID)) {
+                    console.warn('Generated UUID format invalid, fallback to v4');
+                    newUUID = generateUUIDv4();
+                }
+                currentUUID = newUUID;
+                uuidOutputDiv.textContent = currentUUID;
+            } catch (err) {
+                console.error(err);
+                const fallback = generateUUIDv4();
+                currentUUID = fallback;
+                uuidOutputDiv.textContent = fallback;
+                showToast("âš ï¸ using fallback UUID v4");
+            }
+        }
+        
+        // refresh with current version
+        function refreshUUID() {
+            generateAndDisplay(currentVersion);
+        }
+        
+        // copy to clipboard
+        async function copyToClipboard() {
+            const textToCopy = uuidOutputDiv.textContent;
+            if (!textToCopy || textToCopy === '00000000-0000-0000-0000-000000000000') {
+                showToast("âš ï¸ No valid UUID to copy. Generate one first.");
+                return;
+            }
+            try {
+                await navigator.clipboard.writeText(textToCopy);
+                showToast(`âœ… Copied: ${textToCopy}`);
+                // add subtle visual feedback
+                copyBtn.style.transform = 'scale(0.96)';
+                setTimeout(() => { copyBtn.style.transform = ''; }, 150);
+            } catch (err) {
+                // fallback for older browsers
+                const textarea = document.createElement('textarea');
+                textarea.value = textToCopy;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                showToast(`ðŸ“‹ Copied (legacy): ${textToCopy}`);
+            }
+        }
+        
+        let toastTimeout = null;
+        function showToast(message, duration = 2200) {
+            let toast = document.querySelector('.toast-msg');
+            if (!toast) {
+                toast = document.createElement('div');
+                toast.className = 'toast-msg';
+                document.body.appendChild(toast);
+            }
+            toast.textContent = message;
+            toast.style.opacity = '1';
+            if (toastTimeout) clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                toast.style.opacity = '0';
+            }, duration);
+        }
+        
+        // event handlers
+        function initEventListeners() {
+            mainGenBtn.addEventListener('click', () => {
+                refreshUUID();
+                showToast(`âœ¨ Generated new UUID ${currentVersion.toUpperCase()}`);
+            });
+            quickGenBtn.addEventListener('click', () => {
+                refreshUUID();
+                showToast(`ðŸ”„ Refreshed UUID`);
+            });
+            copyBtn.addEventListener('click', copyToClipboard);
+            
+            typeBtns.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const version = btn.getAttribute('data-version');
+                    if (version === currentVersion) return;
+                    setActiveVersion(version);
+                    // generate new uuid with selected version immediately
+                    generateAndDisplay(version);
+                    showToast(`Switched to UUID ${version.toUpperCase()} Â· new ID generated`);
+                });
+            });
+        }
+        
+        // initial generation on page load (v4)
+        function init() {
+            // nodeId and clock sequence will be initialized lazily on first v1 call
+            setActiveVersion('v4');
+            generateAndDisplay('v4');
+            initEventListeners();
+        }
+        
+        init();
+    })();
+</script>
+</body>
+</html>
