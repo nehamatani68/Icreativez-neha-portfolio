@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>AI Study Helper | Smart Learning Companion</title>
+    <!-- Google Fonts + simple reset -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(145deg, #f6f9fc 0%, #eef2f8 100%);
+            color: #1a2c3e;
+            line-height: 1.4;
+            scroll-behavior: smooth;
+        }
+
+        /* custom container */
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 1.5rem 2rem;
+        }
+
+        /* header & nav */
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(100, 108, 255, 0.2);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .logo {
+            font-weight: 700;
+            font-size: 1.7rem;
+            background: linear-gradient(135deg, #3b3bff, #7c4dff);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            letter-spacing: -0.3px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo span {
+            font-size: 1.8rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.8rem;
+            font-weight: 500;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #1f3a4b;
+            transition: 0.2s;
+            font-size: 1rem;
+        }
+
+        .nav-links a:hover {
+            color: #4c4cff;
+        }
+
+        /* hero section */
+        .hero {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 2.5rem;
+            margin: 2rem 0 3rem 0;
+        }
+
+        .hero-text {
+            flex: 1.2;
+        }
+
+        .hero-text h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(to right, #1e2f3f, #2d4b6e);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            line-height: 1.2;
+            margin-bottom: 1rem;
+        }
+
+        .hero-text p {
+            font-size: 1.2rem;
+            color: #2c475c;
+            margin-bottom: 2rem;
+            max-width: 90%;
+        }
+
+        .cta-button {
+            background: #2b2dff;
+            color: white;
+            border: none;
+            padding: 0.9rem 2rem;
+            font-weight: 600;
+            font-size: 1rem;
+            border-radius: 40px;
+            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: 0 8px 20px rgba(43, 45, 255, 0.2);
+            font-family: inherit;
+        }
+
+        .cta-button:hover {
+            background: #181ab3;
+            transform: translateY(-2px);
+            box-shadow: 0 12px 24px rgba(43, 45, 255, 0.3);
+        }
+
+        .hero-illustration {
+            flex: 0.9;
+            background: linear-gradient(135deg, #d9e4ff, #ffffff);
+            border-radius: 48px;
+            padding: 1.8rem;
+            text-align: center;
+            box-shadow: 0 25px 40px -12px rgba(0, 0, 0, 0.15);
+        }
+
+        .hero-illustration svg {
+            max-width: 100%;
+            height: auto;
+        }
+
+        /* cards features */
+        .section-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin: 2.5rem 0 1rem 0;
+            text-align: center;
+            color: #1a2c3e;
+        }
+
+        .section-sub {
+            text-align: center;
+            color: #4a627a;
+            margin-bottom: 2rem;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0 2rem;
+        }
+
+        .feature-card {
+            background: white;
+            border-radius: 28px;
+            padding: 1.8rem;
+            transition: all 0.25s ease;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.02), 0 6px 6px rgba(0, 0, 0, 0.03);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 24px 36px -12px rgba(0, 0, 0, 0.15);
+            border-color: #cddcff;
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        /* AI Tutor box (interactive) */
+        .ai-tutor-section {
+            background: linear-gradient(120deg, #f0f4fe, #ffffff);
+            border-radius: 48px;
+            padding: 2rem 2rem 2.5rem;
+            margin: 3rem 0;
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(98, 91, 255, 0.2);
+        }
+
+        .ai-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 1.2rem;
+            flex-wrap: wrap;
+        }
+
+        .ai-header h2 {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .badge {
+            background: #e0e7ff;
+            padding: 0.3rem 0.8rem;
+            border-radius: 60px;
+            color: #2b2dff;
+            font-weight: 600;
+            font-size: 0.8rem;
+        }
+
+        .chat-area {
+            background: white;
+            border-radius: 32px;
+            padding: 1.2rem;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.02);
+            border: 1px solid #eef2ff;
+        }
+
+        .messages {
+            min-height: 280px;
+            max-height: 320px;
+            overflow-y: auto;
+            padding: 0.5rem 0.5rem 1rem 0.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .message {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+
+        .message.bot {
+            justify-content: flex-start;
+        }
+
+        .message.user {
+            justify-content: flex-end;
+        }
+
+        .bubble {
+            max-width: 80%;
+            padding: 0.8rem 1.2rem;
+            border-radius: 24px;
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+
+        .bot .bubble {
+            background: #f1f3ff;
+            color: #1e2a3a;
+            border-top-left-radius: 6px;
+        }
+
+        .user .bubble {
+            background: #2b2dff;
+            color: white;
+            border-top-right-radius: 6px;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 1rem;
+            align-items: center;
+        }
+
+        .input-group input {
+            flex: 1;
+            padding: 0.9rem 1.2rem;
+            border-radius: 60px;
+            border: 1px solid #ccd9f0;
+            font-family: inherit;
+            font-size: 0.95rem;
+            outline: none;
+            transition: 0.2s;
+        }
+
+        .input-group input:focus {
+            border-color: #4c4cff;
+            box-shadow: 0 0 0 3px rgba(76, 76, 255, 0.2);
+        }
+
+        .input-group button {
+            background: #2b2dff;
+            border: none;
+            color: white;
+            padding: 0.8rem 1.6rem;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .input-group button:hover {
+            background: #1c1db0;
+        }
+
+        .suggest-questions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 1rem;
+        }
+
+        .suggest-chip {
+            background: #eef2ff;
+            padding: 0.4rem 1rem;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.1s;
+        }
+
+        .suggest-chip:hover {
+            background: #cdd9ff;
+        }
+
+        /* study resources / flashcards preview */
+        .flashcard-preview {
+            background: #ffffffdd;
+            backdrop-filter: blur(4px);
+            border-radius: 32px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.8rem;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .flash-text {
+            flex: 2;
+        }
+
+        .flash-demo {
+            flex: 1;
+            background: #eef3fc;
+            border-radius: 28px;
+            padding: 1rem;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .quiz-btn {
+            background: none;
+            border: 1px solid #2b2dff;
+            padding: 0.5rem 1.2rem;
+            border-radius: 28px;
+            font-weight: 600;
+            margin-top: 12px;
+            cursor: pointer;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            border-top: 1px solid #dce5f0;
+            margin-top: 2rem;
+            color: #4b6e8a;
+        }
+
+        @media (max-width: 800px) {
+            .container {
+                padding: 1rem;
+            }
+            .hero-text h1 {
+                font-size: 2.2rem;
+            }
+            .nav-links {
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="glass-nav">
+    <div class="container">
+        <nav>
+            <div class="logo">
+                <span>🧠✨</span> AI Study Helper
+            </div>
+            <div class="nav-links">
+                <a href="#">Home</a>
+                <a href="#features">Features</a>
+                <a href="#tutor">AI Tutor</a>
+                <a href="#tools">Smart Tools</a>
+            </div>
+        </nav>
+    </div>
+</div>
+
+<main class="container">
+    <!-- Hero section -->
+    <div class="hero">
+        <div class="hero-text">
+            <h1>Learn smarter,<br> not harder with <span style="color:#3b3bff;">AI</span></h1>
+            <p>Your personal AI study companion that explains concepts, generates practice questions, and helps you master any subject — 24/7.</p>
+            <button class="cta-button" id="scrollToTutorBtn">🚀 Try AI Tutor Now</button>
+        </div>
+        <div class="hero-illustration">
+            <svg width="240" height="180" viewBox="0 0 300 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="40" y="70" width="220" height="80" rx="20" fill="#E9EEFF" stroke="#b3c0ff" stroke-width="2"/>
+                <circle cx="90" cy="110" r="16" fill="#FFFFFF" stroke="#4c4cff" stroke-width="2"/>
+                <circle cx="90" cy="110" r="6" fill="#4c4cff"/>
+                <path d="M140 110 L210 110" stroke="#4c4cff" stroke-width="3" stroke-linecap="round"/>
+                <path d="M160 130 L190 130" stroke="#4c4cff" stroke-width="3" stroke-linecap="round"/>
+                <path d="M120 90 L220 90" stroke="#b0b6ff" stroke-width="2" stroke-dasharray="4 4"/>
+                <text x="60" y="160" fill="#1f2a44" font-size="12" font-weight="bold">⚡ AI-driven insights</text>
+            </svg>
+        </div>
+    </div>
+
+    <!-- Features section -->
+    <div id="features">
+        <h2 class="section-title">✨ AI Superpowers for Students</h2>
+        <p class="section-sub">Boost your grades and understanding with intelligent assistance</p>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">📖</div>
+                <h3>Concept Explainer</h3>
+                <p>Get clear, step-by-step explanations of complex topics. Just ask "what is recursion?" or "explain photosynthesis".</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📝</div>
+                <h3>Quiz Generator</h3>
+                <p>AI creates custom quizzes based on your study material to test your knowledge and highlight gaps.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🧠</div>
+                <h3>Flashcard Maker</h3>
+                <p>Instantly turn notes into smart flashcards for active recall & spaced repetition.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">⏱️</div>
+                <h3>Study Plan</h3>
+                <p>Personalized schedules and productivity tips powered by learning science.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI TUTOR INTERACTIVE ZONE (final project centerpiece) -->
+    <div id="tutor" class="ai-tutor-section">
+        <div class="ai-header">
+            <h2>🤖 AI Study Tutor</h2>
+            <div class="badge">Live Demo</div>
+        </div>
+        <p class="section-sub" style="text-align:left; margin-bottom:1.2rem;">Ask any academic question — get an instant, friendly explanation. Try sample questions or type your own.</p>
+        <div class="chat-area">
+            <div class="messages" id="chatMessages">
+                <div class="message bot">
+                    <div class="bubble">👋 Hi! I'm your AI Study Helper. Ask me anything: math, science, history, coding, or exam tips. Let's learn together!</div>
+                </div>
+            </div>
+            <div class="input-group">
+                <input type="text" id="userInput" placeholder="e.g., Explain quantum entanglement, or give me a quiz on WW2..." autocomplete="off">
+                <button id="sendBtn">Send ✨</button>
+            </div>
+            <div class="suggest-questions">
+                <div class="suggest-chip" data-question="Explain Newton's first law in simple terms">⚛️ Newton's first law</div>
+                <div class="suggest-chip" data-question="Generate a 3-question quiz about Python lists">🐍 Python quiz</div>
+                <div class="suggest-chip" data-question="What is the difference between mitosis and meiosis?">🧬 Mitosis vs Meiosis</div>
+                <div class="suggest-chip" data-question="Give me a mnemonic to remember the planets order">🪐 Planets mnemonic</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Smart Tools: Flashcard & quiz demo area -->
+    <div id="tools">
+        <h2 class="section-title">⚡ Smart Study Tools</h2>
+        <div class="flashcard-preview">
+            <div class="flash-text">
+                <h3>📇 AI Flashcard Generator</h3>
+                <p>Turn any topic into flashcards instantly. Just click below to get a sample flashcard related to "Machine Learning".</p>
+                <button id="generateFlashBtn" class="quiz-btn" style="background:#2b2dff; color:white; border:none;">✨ Generate Flashcard</button>
+            </div>
+            <div class="flash-demo" id="flashcardDemo">
+                <strong>💡 Sample Flashcard</strong>
+                <p id="flashcardContent" style="margin: 12px 0; font-size:0.9rem;">Click generate to see AI-made card</p>
+                <div style="font-size:0.75rem; color:#406e8e;">front / back concept</div>
+            </div>
+        </div>
+        <div class="flashcard-preview" style="background:#fafcff;">
+            <div class="flash-text">
+                <h3>📝 Smart Quiz Generator</h3>
+                <p>Generate a micro-quiz about "Artificial Intelligence" to test your knowledge.</p>
+                <button id="generateQuizBtn" class="quiz-btn">🧪 Generate Mini Quiz</button>
+            </div>
+            <div id="quizResult" style="flex:1; background:#ffffff; border-radius:24px; padding:1rem;">
+                <p style="font-weight:500;">Your quiz will appear here ✨</p>
+            </div>
+        </div>
+    </div>
+    <footer>
+        <p>🧠 AI Study Helper — Final project | Powered by intelligent reasoning engine | Learn with AI anytime</p>
+    </footer>
+</main>
+
+<script>
+    // ---------- AI RESPONSE ENGINE (simulated advanced study helper) ----------
+    // This smart logic handles multiple intents: explain, quiz, flashcards, general questions.
+    function getAIResponse(userMessage) {
+        let msg = userMessage.toLowerCase().trim();
+        
+        // Quiz generation pattern
+        if (msg.includes("quiz") || (msg.includes("generate") && msg.includes("question")) || (msg.includes("test me") && msg.includes("on"))) {
+            // Extract topic roughly
+            let topic = "general knowledge";
+            if (msg.includes("python")) topic = "Python programming";
+            else if (msg.includes("history") || msg.includes("ww2")) topic = "World War II";
+            else if (msg.includes("biology") || msg.includes("mitosis")) topic = "Cell Biology";
+            else if (msg.includes("math") || msg.includes("calculus")) topic = "Calculus";
+            else if (msg.includes("ai") || msg.includes("artificial intelligence")) topic = "Artificial Intelligence";
+            else if (msg.match(/[a-z]/) && !msg.includes("quiz")) {
+                let words = msg.split(" ");
+                for(let w of words) {
+                    if(w.length > 4 && !["quiz","generate","give","make"].includes(w)) {
+                        topic = w;
+                        break;
+                    }
+                }
+            }
+            return generateQuiz(topic);
+        }
+        
+        // Flashcard generation request
+        if (msg.includes("flashcard") || (msg.includes("make") && msg.includes("card")) || msg.includes("create flashcard")) {
+            let concept = "important concept";
+            if (msg.includes("machine learning")) concept = "Machine Learning";
+            else if (msg.includes("javascript")) concept = "JavaScript Closure";
+            else if (msg.includes("python")) concept = "Python List Comprehension";
+            else if (msg.includes("physics")) concept = "Quantum Mechanics";
+            else concept = extractTopic(msg) || "Active Recall";
+            return generateFlashcardResponse(concept);
+        }
+        
+        // Explanation style for general questions (including definitions, differences, etc)
+        if (msg.includes("explain") || msg.includes("what is") || msg.includes("define") || msg.includes("difference between")) {
+            if (msg.includes("newton")) return "🔍 Newton's First Law: An object at rest stays at rest, and an object in motion stays in motion with the same speed and in the same direction unless acted upon by an unbalanced force. In short: inertia! 🚀";
+            if (msg.includes("mitosis") && msg.includes("meiosis")) return "🧬 Mitosis produces 2 identical diploid daughter cells (growth/repair), while Meiosis produces 4 genetically unique haploid cells (for reproduction). Mitosis = body cells, Meiosis = gametes.";
+            if (msg.includes("quantum entanglement")) return "⚛️ Quantum entanglement is when two particles become linked so that the state of one instantly influences the other, no matter the distance. Einstein called it 'spooky action' — a key part of modern physics!";
+            if (msg.includes("recursion")) return "🔄 Recursion is a function calling itself to solve smaller instances of a problem. Example: factorial(n) = n * factorial(n-1). Base case stops the infinite chain.";
+            if (msg.includes("photosynthesis")) return "🌿 Photosynthesis: plants convert sunlight, CO₂, and water into glucose and oxygen. Happens in chloroplasts (chlorophyll). Formula: 6CO₂ + 6H₂O + light → C₆H₁₂O₆ + 6O₂.";
+            return `📘 Let me explain: ${userMessage.substring(0, 100)}... \n\nHere's a clear breakdown: In simple terms, this concept is about understanding core principles. For deeper insight, try breaking it into smaller parts. Want a concrete example or practice problem?`;
+        }
+        
+        // Mnemonic request
+        if (msg.includes("mnemonic") || (msg.includes("remember") && msg.includes("planets"))) {
+            return "🪐 Planets mnemonic (My Very Educated Mother Just Served Us Noodles) → Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, Neptune. Bonus: Pluto used to be 'Pizza' 😊";
+        }
+        
+        // Study tips, plan
+        if (msg.includes("study tip") || msg.includes("how to study") || msg.includes("productivity")) {
+            return "📚 Study tip: Use active recall & spaced repetition. Try the Pomodoro technique (25 min focus + 5 min break). Summarize topics in your own words. And always test yourself with flashcards! Want a custom plan?";
+        }
+        
+        // coding help
+        if (msg.includes("python") && (msg.includes("list") || msg.includes("code"))) {
+            return "🐍 Python List Quiz sample: 1) How to add element to list? (append). 2) What does .pop() do? (removes last). 3) List slicing [start:end]? Great! Want more depth?";
+        }
+        
+        // default smart reply
+        return "🤖 Great question! To give you the most accurate answer, think about breaking it into steps. For example: " + 
+               "1) Restate the problem 2) Identify key terms 3) Apply known principles. \n\nWould you like me to explain a specific topic or generate a practice quiz? Try 'quiz on calculus' or 'explain mitosis'!";
+    }
+    
+    // helper: extract simple topic
+    function extractTopic(msg) {
+        let words = msg.split(" ");
+        for(let w of words) {
+            if(w.length > 4 && !["flashcard","make","create","give"].includes(w))
+                return w.charAt(0).toUpperCase() + w.slice(1);
+        }
+        return "Study Topic";
+    }
+    
+    function generateQuiz(topic) {
+        if(topic === "Python programming") {
+            return "📝 *Python Quiz*:\n1️⃣ What keyword is used to define a function? (def)\n2️⃣ Which data type is immutable? (tuple)\n3️⃣ Output of print(2**3)? (8)\n👉 Reply with your answers or ask for explanation!";
+        } else if(topic === "World War II") {
+            return "🌍 *WW2 Quiz*:\n1) Which event started WWII in Europe? (Invasion of Poland)\n2) What was D-Day? (Allied invasion of Normandy)\n3) Who was the US president at the end? (Truman)";
+        } else if(topic === "Artificial Intelligence") {
+            return "🤖 *AI Quick Quiz*:\n1) What does NLP stand for? (Natural Language Processing)\n2) What type of learning uses labeled data? (Supervised)\n3) Name a common AI application. (Chatbots, vision, etc.)";
+        } else if(topic === "Calculus") {
+            return "📐 *Calculus Quiz*:\n1) Derivative of x^2? (2x)\n2) What does integral represent? (Area under curve)\n3) Limit of (sin x)/x as x→0? (1)";
+        } else {
+            return `📚 *${topic.charAt(0).toUpperCase() + topic.slice(1)} Mini Quiz*:\n1) What is the core definition of ${topic}?\n2) Give one real-world application.\n3) What is a common misconception?\n🧠 Try to answer these, then ask me to check!`;
+        }
+    }
+    
+    function generateFlashcardResponse(concept) {
+        if(concept === "Machine Learning") {
+            return "📇 FLASHCARD: [Front] What is supervised learning? [Back] Learning from labeled data to predict outcomes. Example: spam detection.";
+        } else if(concept === "JavaScript Closure") {
+            return "📇 FLASHCARD: [Front] What is a closure in JS? [Back] A function with access to its outer scope even after the outer function has returned.";
+        } else if(concept === "Python List Comprehension") {
+            return "📇 FLASHCARD: [Front] Syntax for list comprehension? [Back] [expression for item in iterable if condition] → creates lists concisely.";
+        } else {
+            return `📇 FLASHCARD: [Front] What is ${concept}? [Back] ${concept} is a fundamental idea in studies. Try to recall examples and create your own connections!`;
+        }
+    }
+    
+    // UI chat handling
+    const chatContainer = document.getElementById("chatMessages");
+    const userInput = document.getElementById("userInput");
+    const sendBtn = document.getElementById("sendBtn");
+    
+    function appendMessage(text, isUser) {
+        const msgDiv = document.createElement("div");
+        msgDiv.className = `message ${isUser ? "user" : "bot"}`;
+        const bubble = document.createElement("div");
+        bubble.className = "bubble";
+        bubble.innerHTML = text.replace(/\n/g, '<br>');
+        msgDiv.appendChild(bubble);
+        chatContainer.appendChild(msgDiv);
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
+    
+    function handleUserQuery() {
+        let query = userInput.value.trim();
+        if(query === "") return;
+        appendMessage(query, true);
+        userInput.value = "";
+        // Simulate AI typing effect (instant but responsive)
+        const aiReply = getAIResponse(query);
+        setTimeout(() => {
+            appendMessage(aiReply, false);
+        }, 100);
+    }
+    
+    sendBtn.addEventListener("click", handleUserQuery);
+    userInput.addEventListener("keypress", (e) => {
+        if(e.key === "Enter") handleUserQuery();
+    });
+    
+    // suggest chips
+    document.querySelectorAll(".suggest-chip").forEach(chip => {
+        chip.addEventListener("click", () => {
+            const qText = chip.getAttribute("data-question");
+            if(qText) {
+                userInput.value = qText;
+                handleUserQuery();
+            }
+        });
+    });
+    
+    // scroll to tutor button
+    document.getElementById("scrollToTutorBtn").addEventListener("click", () => {
+        document.getElementById("tutor").scrollIntoView({ behavior: "smooth" });
+    });
+    
+    // Flashcard generator dynamic (extra tool)
+    const generateFlashBtn = document.getElementById("generateFlashBtn");
+    const flashcardContent = document.getElementById("flashcardContent");
+    generateFlashBtn.addEventListener("click", () => {
+        const topics = ["Machine Learning", "JavaScript Closure", "Photosynthesis", "SQL Joins", "Newton's Laws"];
+        const randomTopic = topics[Math.floor(Math.random() * topics.length)];
+        const flashResp = generateFlashcardResponse(randomTopic);
+        flashcardContent.innerHTML = flashResp.replace("📇 FLASHCARD: ", "").replace(/\[Front\]/g, "<strong>🔹 Front:</strong>").replace(/\[Back\]/g, "<br><strong>🔸 Back:</strong>");
+    });
+    
+    // Quiz generator interactive (dynamic)
+    const generateQuizBtn = document.getElementById("generateQuizBtn");
+    const quizResultDiv = document.getElementById("quizResult");
+    generateQuizBtn.addEventListener("click", () => {
+        const aiQuiz = getAIResponse("generate a quiz on Artificial Intelligence");
+        quizResultDiv.innerHTML = `<div style="background:#f5f7ff; border-radius:24px; padding:1rem;"><strong>✨ AI Generated Quiz</strong><br><span style="font-size:0.9rem;">${aiQuiz.replace(/\n/g, '<br>')}</span><br><small style="color:#4a6f8f;">💡 Try answering & then ask the tutor to verify!</small></div>`;
+    });
+    
+    // Optional first demo flashcard on load
+    setTimeout(() => {
+        if(flashcardContent) flashcardContent.innerHTML = "📇 [Front] What is active recall? [Back] A learning technique testing yourself instead of passive review. 🧠";
+    }, 200);
+</script>
+</body>
+</html>
